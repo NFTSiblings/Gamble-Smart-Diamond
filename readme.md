@@ -1,11 +1,3 @@
-## **Deployments**
-
-This Diamond is deployed at 0x492fC41f031A28AbA7446c9422247541d2D37c80 on Goerli testnet.
-
-[Diamond Admin Panel](https://ethan-sibs.web.app/?diamond=0x492fC41f031A28AbA7446c9422247541d2D37c80)
-
-[Etherscan](https://goerli.etherscan.io/address/0x492fC41f031A28AbA7446c9422247541d2D37c80)
-
 ## **Adapting this Template for a New Project**
 
 - Run `npm install` to install required modules
