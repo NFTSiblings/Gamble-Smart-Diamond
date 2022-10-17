@@ -6,7 +6,7 @@ pragma solidity ^0.8.4;
  * Version 0.5.0
  * 
  * This facet contract has been written specifically for
- * ERC721A-DIAMOND-TEMPLATE by Sibling Labs
+ * Gamble-Smart-Diamond by Sibling Labs
 /**************************************************************/
 
 import { GlobalState } from "../libraries/GlobalState.sol";
@@ -21,7 +21,7 @@ contract CenterFacet is ERC721AUpgradeable, ERC721AQueryableUpgradeable {
 
     // EVENTS //
     
-    event result(bool result, uint256 tokenId, uint256 newLevel);
+    event gambleResult(bool result, uint256 tokenId, uint256 newLevel);
 
     // VARIABLE GETTERS //
 
@@ -50,7 +50,7 @@ contract CenterFacet is ERC721AUpgradeable, ERC721AQueryableUpgradeable {
     }
 
     function level(uint256 tokenId) external view returns (uint256) {
-        require(_exists(tokenId), "Given tokenId does not exist");
+        require(_exists(tokenId), "Token does not exist");
         return CenterFacetLib.getState().level[tokenId];
     }
 
@@ -125,15 +125,21 @@ contract CenterFacet is ERC721AUpgradeable, ERC721AQueryableUpgradeable {
 
     function gamble(uint256 tokenId) external {
         GlobalState.requireContractIsNotPaused();
-        require(ownerOf(tokenId) == msg.sender, "tokenId is not owner by the sender");
-        bool upgrade = randomNumberDecider(tokenId);
-        if(upgrade){
+        require(
+            ownerOf(tokenId) == msg.sender ||
+            getApproved(tokenId) == msg.sender ||
+            isApprovedForAll(ownerOf(tokenId), msg.sender),
+            "Must own token to gamble"
+        );
+
+        bool result = getRandom(tokenId);
+        if (result){
             CenterFacetLib.getState().level[tokenId]++;
         }
-        else if(!upgrade){
+        else {
             _burn(tokenId, true);
         }
-        emit result(upgrade, tokenId, CenterFacetLib.getState().level[tokenId]);
+        emit gambleResult(result, tokenId, CenterFacetLib.getState().level[tokenId]);
     }
 
     // METADATA & MISC FUNCTIONS //
@@ -142,16 +148,15 @@ contract CenterFacet is ERC721AUpgradeable, ERC721AQueryableUpgradeable {
         return _exists(tokenId);
     }
 
-    function randomNumberDecider(uint256 tokenId) internal view returns (bool) {
-        uint256 randomNumberDecide = uint256(
+    function getRandom(uint256 tokenId) internal view returns (bool) {
+        uint256 num = uint256(
             keccak256(
                 abi.encodePacked(
                     tokenId, block.number, msg.sender, block.coinbase, block.timestamp
                 )
             )
         ) % 2;
-        if(randomNumberDecide == 0) return false;
-        else if(randomNumberDecide == 1) return true;
+        return num > 0 ? true : false;
     }
 
     function _safeMint(address to, uint256 amount) internal override {

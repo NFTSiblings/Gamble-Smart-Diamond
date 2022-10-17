@@ -129,7 +129,7 @@ describe("CenterFacet", () => {
         it("Reverts if the tokenId doesn't exist", async () => {
 
             await expect(CenterFacet.level(0))
-            .to.be.revertedWith("Given tokenId does not exist")
+            .to.be.revertedWith("Token does not exist")
 
         })
         
@@ -444,8 +444,8 @@ describe("CenterFacet", () => {
         it('Gamble function working correctly', async () => {
 
             for(let x = 0; x < 10; x++){
-                console.log(`${x} Iteration:`)
-                console.log('')
+                // console.log(`${x} Iteration:`)
+                // console.log('')
                 await snapshot.restore();
                 for(let i = 0; i < numberOfTokenMinted; i++){
                     const currentLevel = await CenterFacet.level(i)
@@ -462,9 +462,9 @@ describe("CenterFacet", () => {
                             expect(await CenterFacet.exists(i)).to.equal(false)
                         }
                     }
-                    console.log(numberOfLoop)
+                    // console.log(numberOfLoop)
                 }
-                console.log('')
+                // console.log('')
             }
 
         })

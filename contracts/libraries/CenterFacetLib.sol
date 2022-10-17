@@ -6,8 +6,7 @@ pragma solidity ^0.8.0;
  * Version 0.3.0
  * 
  * This library is designed to work in conjunction with
- * CenterFacet - it facilitates diamond storage and shared
- * functionality associated with CenterFacet.
+ * CenterFacet as part of Gamble-Smart-Diamond by Sibling Labs
 /**************************************************************/
 
 import "erc721a-upgradeable/contracts/ERC721AStorage.sol";
